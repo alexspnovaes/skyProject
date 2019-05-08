@@ -9,9 +9,6 @@ let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let helmet = require('helmet');
 
-//let userServiceProxy = httpProxy('http://localhost:3001');
-//let productsServiceProxy = httpProxy('http://localhost:3002');
-
 
 // Initialize the app
 let app = express();
@@ -34,7 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Connect to Mongoose and set connection variable
-mongoose.connect('mongodb://localhost/sky');
+mongoose.connect('mongodb://skyuser:al3x4ndr31987@ds153566.mlab.com:53566/sky');
 var db = mongoose.connection;
 
 // Setup server port
