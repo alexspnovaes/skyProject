@@ -11,7 +11,7 @@ let helmet = require('helmet');
 
 //let userServiceProxy = httpProxy('http://localhost:3001');
 //let productsServiceProxy = httpProxy('http://localhost:3002');
-let jwt = require('jsonwebtoken');
+
 
 // Initialize the app
 let app = express();
@@ -49,19 +49,6 @@ app.use('/api', apiRoutes)
 app.listen(port, function () {
     console.log("Running RestHub on port " + port);
 });
-
-function verifyJWT(req, res, next){
-    var token = req.headers['x-access-token'];
-    if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
-    
-    jwt.verify(token, process.env.SECRET, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-      
-      // se tudo estiver ok, salva no request para uso posterior
-      req.userId = decoded.id;
-      next();
-    });
-  }
 
 
 

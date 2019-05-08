@@ -17,35 +17,38 @@ exports.index = function (req, res) {
         });
     });
 };
+
+
 // Handle create user actions
-exports.new = function (req, res) {
-    var user = new User();
-    user.nome = req.body.nome ? req.body.nome : user.nome;
-    user.email = req.body.email;
-    user.senha = req.body.senha;
-    user.telefones = req.body.telefones;
-
-    //todo: validar se e-mail já existe
-
-    const email = user.email;
-    var token = jwt.sign({ email }, process.env.SECRET, {
-        expiresIn: 300 // expires in 5min
-      });
-
-    user.token = token;
-
-    // save the user and check for errors
-    user.save(function (err) {
-        // if (err)
-        //     res.json(err);
-       
-
-        res.json({
-            message: 'Novo usuário criado!',
-            data: user,
-            token: token
+exports.signup = function (req, res) {
+    validateEmail(req.body.email).then(function(exists){
+        if (exists) 
+            return res.status(409).send({mensagem: 'Esse e-mail já existe'});
+        
+        var user = new User();
+        user.nome = req.body.nome ? req.body.nome : user.nome;
+        user.email = req.body.email;
+        user.senha = req.body.senha;
+        user.telefones = req.body.telefones;
+        
+        const email = user.email;
+        var token = jwt.sign({ email }, process.env.SECRET, {
+            expiresIn: 300 // expires in 5min
         });
-    });
+        
+        user.token = token;
+        
+        // save the user and check for errors
+        user.save(function (err) {
+            if (err)
+            res.status(500).send({mensagem: 'Erro ao efetuar o sigin:' + err});
+            
+            res.status(200).send({
+                mensagem: 'Usuário criado com sucesso',
+                data: user, 
+            });
+        });
+    })
 };
 // Handle view user info
 exports.view = function (req, res) {
@@ -60,6 +63,8 @@ exports.view = function (req, res) {
 };
 // Handle update user info
 exports.update = function (req, res) {
+    
+    
     User.findById(req.params.user_id, function (err, user) {
         if (err)
         res.send(err);
@@ -91,3 +96,10 @@ exports.delete = function (req, res) {
         });
     });
 };
+
+function validateEmail(email){
+    
+    return User.findOne({email: email}).then(function(result){
+        return result !== null;
+    });
+}
