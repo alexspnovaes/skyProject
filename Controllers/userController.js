@@ -24,14 +24,21 @@ exports.new = function (req, res) {
     user.email = req.body.email;
     user.senha = req.body.senha;
     user.telefones = req.body.telefones;
+
+    //todo: validar se e-mail já existe
+
+    const email = user.email;
+    var token = jwt.sign({ email }, process.env.SECRET, {
+        expiresIn: 300 // expires in 5min
+      });
+
+    user.token = token;
+
     // save the user and check for errors
     user.save(function (err) {
         // if (err)
         //     res.json(err);
-        const id = user.id;
-        var token = jwt.sign({ id }, process.env.SECRET, {
-            expiresIn: 300 // expires in 5min
-          });
+       
 
         res.json({
             message: 'Novo usuário criado!',

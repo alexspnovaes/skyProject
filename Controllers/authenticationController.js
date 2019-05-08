@@ -9,8 +9,9 @@ exports.signin = function (req, res) {
         
         if(req.body.email === user.email && req.body.senha === user.senha){
             //auth ok
-            const id = user.id; 
-            var token = jwt.sign({ id }, process.env.SECRET, {
+            //todo: atualizar a data de último login
+            const email = user.email; 
+            var token = jwt.sign({ email }, process.env.SECRET, {
               expiresIn: 300 // expires in 5min
             });
             res.status(200).send({ auth: true, token: token });

@@ -27,6 +27,9 @@ var userSchema = mongoose.Schema({
     data_ultimo_login:{
         type: Date,
         default: Date.now
+    },
+    token: {
+        type: String
     }
 });
 
