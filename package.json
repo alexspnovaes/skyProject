@@ -4,7 +4,7 @@
   "description": "Sky project SigIn/SigOut, a small api to SignIN (login) and SigOut",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",    
     "pretest": "eslint --ignore-path .gitignore ."
   },
   "repository": {
