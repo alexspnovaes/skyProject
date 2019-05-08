@@ -1,0 +1,32 @@
+{
+  "name": "skyproject",
+  "version": "1.0.0",
+  "description": "Sky project SigIn/SigOut, a small api to SignIN (login) and SigOut",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexspnovaes/skyProject.git"
+  },
+  "keywords": [
+    "SKY"
+  ],
+  "author": "Alexandre Spreafico Novaes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexspnovaes/skyProject/issues"
+  },
+  "homepage": "https://github.com/alexspnovaes/skyProject#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "dotenv-safe": "^6.1.0",
+    "express": "^4.16.4",
+    "helmet": "^3.18.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.5.6",
+    "morgan": "^1.9.1"
+  }
+}
