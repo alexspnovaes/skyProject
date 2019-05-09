@@ -254,3 +254,4 @@
 /node_modules/.bin
 /node_modules/@babel
 /node_modules/accepts
+/node_modules/yallist/*
