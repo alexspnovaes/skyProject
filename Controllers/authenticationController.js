@@ -14,15 +14,14 @@ exports.signin = function (req, res) {
       });
       
       user.token = token;
-      user.data_ultimo_login = Date.now;
+      user.data_ultimo_login = Date.now();
       
       user.save(function (err) {
-        if (err)
-        res.json(err);              
-        res.status(200).send({ auth: true, token: token });
+        if (err)  return res.status(500).send({mensagem:'Erro ao efetuar login: ' +err});              
+        return res.status(200).send({ auth: true, token: token });
       });
     }
-    else res.status(500).send({mensagem: 'Login inválido!'});
+    else return res.status(500).send({mensagem: 'Login inválido!'});
   });
 };
 
