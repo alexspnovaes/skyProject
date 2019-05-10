@@ -4,25 +4,9 @@ let jwt = require('jsonwebtoken')
 let User = require('../Models/userModel')
 // Import bcrypt
 let bcrypt = require('bcrypt')
-// Handle index actions
-exports.index = function (req, res) {
-  User.get(function (err, users) {
-    if (err) {
-      res.json({
-        status: 'error',
-        message: err
-      })
-    }
-    res.json({
-      status: 'success',
-      message: 'users retrieved successfully',
-      data: users
-    })
-  })
-}
 
-// Handle create user actions
 exports.signup = function (req, res) {
+  if (!req) return res.status(422).send({ mensagem: 'Nenhum parâmetro foi enviado' })
   validateEmail(req.body.email).then(function (exists) {
     if (exists) { return res.status(409).send({ mensagem: 'Esse e-mail já existe' }) }
 
@@ -36,59 +20,36 @@ exports.signup = function (req, res) {
 
     const email = user.email
     var token = jwt.sign({ email }, process.env.SECRET, {
-      expiresIn: 300 // expires in 5min
+      expiresIn: 1800 // expires in 5min
     })
 
     user.token = token
 
     // save the user and check for errors
     user.save(function (err) {
-      if (err) { res.status(500).send({ mensagem: 'Erro ao efetuar o sigin:' + err }) }
+      if (err) { return res.status(500).send({ mensagem: 'Erro ao efetuar o signup:' + err }) }
 
-      res.status(200).send({
+      return res.status(200).send({
         mensagem: 'Usuário criado com sucesso',
-        data: user
+        usuario: {
+          id: user.id,
+          data_criacao: user.data_criacao,
+          data_atualizacao: user.data_atualizacao,
+          ultimo_login: user.data_ultimo_login,
+          token: user.token
+        }
       })
     })
   })
 }
 // Handle view user info
 exports.view = function (req, res) {
+  if (!req) return res.status(422).send({ mensagem: 'Nenhum parâmetro foi enviado' })
+  if (!req.params.user_id) return res.status(422).send({ mensagem: 'O parâmetro id não pode ser em branco' })
   User.findById(req.params.user_id, function (err, user) {
-    if (err) { res.send(err) }
-    res.json({
-      message: 'user details loading..',
-      data: user
-    })
-  })
-}
-// Handle update user info
-exports.update = function (req, res) {
-  User.findById(req.params.user_id, function (err, user) {
-    if (err) { res.send(err) }
-    user.name = req.body.name ? req.body.name : user.name
-    user.gender = req.body.gender
-    user.email = req.body.email
-    user.phone = req.body.phone
-    // save the user and check for errors
-    user.save(function (err) {
-      if (err) { res.json(err) }
-      res.json({
-        message: 'user Info updated',
-        data: user
-      })
-    })
-  })
-}
-// Handle delete user
-exports.delete = function (req, res) {
-  User.remove({
-    _id: req.params.user_id
-  }, function (err, user) {
-    if (err) { res.send(err) }
-    res.json({
-      status: 'success',
-      message: 'user deleted'
+    if (err) { return res.status(500).send({ mensagem: 'Erro ao selecionar o usuário:' + err }) }
+    return res.status(200).send({
+      usuario: user
     })
   })
 }
