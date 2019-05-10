@@ -8,7 +8,7 @@ let bcrypt = require('bcrypt')
 exports.signup = function (req, res) {
   if (!req) return res.status(422).send({ mensagem: 'Nenhum parâmetro foi enviado' })
   validateEmail(req.body.email).then(function (exists) {
-    if (exists) { return res.status(409).send({ mensagem: 'Esse e-mail já existe' }) }
+    if (exists) { return res.status(409).send({ mensagem: 'E-mail já existente' }) }
 
     let hash = bcrypt.hashSync(req.body.senha, 10)
 
